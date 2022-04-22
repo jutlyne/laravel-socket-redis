@@ -34,3 +34,13 @@ sail@137b38de6c4b:/var/www/html$ npm install sail@137b38de6c4b:/var/www/html$ np
 
 ## Go to localhost::{APP_PORT}
 APP_PORT is a param at .env (8800)
+
+## Go to nodejs folder
+node server
+
+## Run artisan
+php artisan quere:listen
+php artisan ser
+
+## Run redis server
+sudo redis-server --port 1000
