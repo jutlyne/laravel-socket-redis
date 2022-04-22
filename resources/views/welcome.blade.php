@@ -360,7 +360,7 @@
         integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous">
     </script>
 
-    <script>
+    {{-- <script>
         $(function() {
             let ip_address = '192.168.1.139',
                 socket_port = '3001',
@@ -397,9 +397,9 @@
                 `);
             });
         });
-    </script>
-    {{-- <script>
-        let ip_address = '192.168.1.139',
+    </script> --}}
+    <script>
+        let ip_address = '127.0.0.1',
             socket_port = '3001',
             socket = io(ip_address + ':' + socket_port),
             chatInput = $('#chatInput');
@@ -415,7 +415,7 @@
             }
 
             if (e.which === 13 && !e.shiftKey) {
-                socket.emit('message', message);
+                socket.emit('message', 'message');
                 $.ajax({
                     url: `{{ route('chat.send-message') }}`,
                     type: 'get',
@@ -428,10 +428,14 @@
             }
         });
 
-        socket.on('chat', (message) => {
-            $('.chat-content ul').append(`<li>${message.user_name} - ${message.message}</li>`);
+        socket.on('sendChatToServer', (message) => {
+            $('#chat-room').append(`
+                <li class="clearfix">
+                    <div class="message my-message">${message.message}</div>
+                </li>
+            `);
         });
-    </script> --}}
+    </script>
 </body>
 
 </html>
