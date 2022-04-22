@@ -18,6 +18,6 @@ use Illuminate\Support\Facades\Auth;
 Route::get('login', [ChatController::class, 'loginWithId'])->name('login');
 
 Route::middleware('auth')->group(function () {
-    Route::get('home', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('/', [ChatController::class, 'index'])->name('chat.index');
     Route::get('send-message', [ChatController::class, 'sendMessage'])->name('chat.send-message');
 });

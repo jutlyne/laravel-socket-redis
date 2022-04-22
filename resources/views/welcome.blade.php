@@ -245,6 +245,10 @@
             /* Firefox */
         }
 
+        .input-group-text {
+            height: 100%;
+        }
+
         @media only screen and (max-width: 767px) {
             .chat-app .people-list {
                 height: 465px;
@@ -316,7 +320,7 @@
                             <li class="clearfix active">
                                 <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
                                 <div class="about">
-                                    <div class="name">Aiden Chavez</div>
+                                    <div class="name">{{ auth()->user()->name }}</div>
                                     <div class="status"> <i class="fa fa-circle online"></i> online </div>
                                 </div>
                             </li>
@@ -330,18 +334,31 @@
                                         <img src="https://bootdey.com/img/Content/avatar/avatar2.png" alt="avatar">
                                     </a>
                                     <div class="chat-about">
-                                        <h6 class="m-b-0">Aiden Chavez</h6>
+                                        <h6 class="m-b-0">{{ auth()->user()->name }}</h6>
                                         <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <div class="chat-history">
-                            <ul class="m-b-0" id="chat-room"></ul>
+                            <ul class="m-b-0" id="chat-room">
+                                @foreach ($chats as $chat)
+                                    @if ($chat->from_user_id == auth()->id())
+                                        <li class="clearfix">
+                                            <div class="message other-message float-right"> {{ $chat->message }}
+                                            </div>
+                                        </li>
+                                    @else
+                                        <li class="clearfix">
+                                            <div class="message my-message"> {{ $chat->message }} </div>
+                                        </li>
+                                    @endif
+                                @endforeach
+                            </ul>
                         </div>
                         <div class="chat-message clearfix">
                             <div class="input-group mb-0">
-                                <div class="input-group-prepend">
+                                <div class="input-group-prepend" id="btnSend">
                                     <span class="input-group-text"><i class="fa fa-send"></i></span>
                                 </div>
                                 <input type="hidden" name="user_name" id="user_name" value="">
@@ -361,7 +378,7 @@
         integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous">
     </script>
 
-    <script>
+    {{-- <script>
         $(function() {
             let ip_address = '192.168.1.139',
                 socket_port = '3001',
@@ -398,8 +415,30 @@
                 `);
             });
         });
-    </script>
-    {{-- <script>
+    </script> --}}
+    <script>
+        $(document)
+            .ready(function() {
+                $('.chat-history').animate({
+                    scrollTop: $('.chat-history').get(0).scrollHeight
+                }, 2000);
+            })
+            .on('click', '#btnSend', function () {
+                let message = {
+                    user_name: $('#user_name').val(),
+                    message: chatInput.val()
+                }
+
+                $.ajax({
+                    url: `{{ route('chat.send-message') }}`,
+                    type: 'get',
+                    data: message,
+                    success: function(data) {}
+                });
+                chatInput.val('');
+
+                return false;
+            });
         let ip_address = '127.0.0.1',
             socket_port = '3001',
             socket = io(ip_address + ':' + socket_port),
@@ -413,7 +452,6 @@
             }
 
             if (e.which === 13 && !e.shiftKey) {
-                // socket.emit('message', message);
                 $.ajax({
                     url: `{{ route('chat.send-message') }}`,
                     type: 'get',
@@ -440,8 +478,12 @@
                     </li>
                 `);
             }
+
+            $('.chat-history').animate({
+                scrollTop: $('.chat-history').get(0).scrollHeight
+            }, 0);
         });
-    </script> --}}
+    </script>
 </body>
 
 </html>
