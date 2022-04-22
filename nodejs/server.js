@@ -3,16 +3,27 @@ const express = require('express'),
     server = require('http').createServer(app),
     io = require('socket.io')(server, {
         cors: {origin: '*'}
-    });
+    }),
+    redis = require('ioredis'),
+    redisClient = new redis(1000);
+
+// redisClient.psubscribe('*', (err, count) => {})
+// redisClient.on('pmessage', function (pattern, channel, message) {
+//     console.log(message);
+//     // message = JSON.parse(message);
+//     // io.emit(channel + ":" + message.event, message.data.message);
+//     // console.log('send');
+// });
 
 io.on('connection', function (socket) {
-    console.log('a user connected');
+    console.log('a user connected' + socket.id);
     socket.on('disconnect', function (socket) {
         console.log('user disconnected');
     });
     socket.on('sendChatToServer', function (msg) {
-        io.sockets.emit('sendChatToServer', msg);
-        // socket.broadcast.emit('sendChatToClient', msg);
+        // console.log(msg);
+        // io.sockets.emit('sendChatToServer', msg);
+        socket.broadcast.emit('sendChatToClient', msg);
     });
 });
 

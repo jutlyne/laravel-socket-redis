@@ -3,28 +3,41 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-// use LRedis;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Chat;
+use App\Models\User;
+use App\Events\ChatEvent;
 
 class ChatController extends Controller
 {
-    public function __construct()
-	{
-		$this->middleware('guest');
-	}
+    // public function __construct()
+    // {
+    //     $this->middleware('auth');
+    // }
 
     public function index()
     {
-        return view('chat');
+        $chats = Chat::all();
+
+        return view('welcome', compact('chats'));
     }
 
-	// public function sendMessage(Request $request){
-	// 	$redis = LRedis::connection();
-	// 	$data = [
-    //         'message' => $request->message,
-    //         'user' => $request->user
-    //     ];
-	// 	$redis->publish('message', json_encode($data));
+    public function loginWithId()
+    {
+        Auth::loginUsingId(
+            User::all()->random()->id
+        );
 
-	// 	return response()->json([]);
-	// }
+        return redirect()->route('chat.index');
+    }
+	public function sendMessage(Request $request){
+        $chat = new Chat();
+        $chat->author = auth()->user()->name;
+        $chat->message = $request->message;
+        $chat->save();
+
+        event(new ChatEvent($chat));
+
+		return response()->json([]);
+	}
 }

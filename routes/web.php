@@ -15,17 +15,9 @@ use Illuminate\Support\Facades\Auth;
 |
 */
 
-Route::get('/',
- function () {
-    return view('welcome');
-});
+Route::get('login', [ChatController::class, 'loginWithId'])->name('login');
 
-Route::get('chat', function () {
-    return view('chat');
+Route::middleware('auth')->group(function () {
+    Route::get('home', [ChatController::class, 'index'])->name('chat.index');
+    Route::get('send-message', [ChatController::class, 'sendMessage'])->name('chat.send-message');
 });
-
-Route::get('home', [ChatController::class, 'index']);
-Route::get('login/{id}', function ($id) {
-    Auth::loginUsingId($id);
-});
-Route::post('sendmessage', [ChatController::class, 'sendMessage']);
