@@ -20,6 +20,8 @@ class ChatEvent implements ShouldBroadcast
      *
      * @return void
      */
+    public $chat;
+
     public function __construct(Chat $chat)
     {
         $this->chat = $chat;
@@ -32,8 +34,7 @@ class ChatEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['messages'];
-        // return new PrivateChannel('channel-name');
+        return ['chat'];
     }
 
     public function broadcastAs()

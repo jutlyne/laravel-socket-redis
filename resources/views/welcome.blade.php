@@ -331,6 +331,7 @@
                                     </a>
                                     <div class="chat-about">
                                         <h6 class="m-b-0">Aiden Chavez</h6>
+                                        <input type="hidden" name="user_id" value="{{ auth()->id() }}">
                                     </div>
                                 </div>
                             </div>
@@ -360,7 +361,7 @@
         integrity="sha384-LzhRnpGmQP+lOvWruF/lgkcqD+WDVt9fU3H4BWmwP5u5LTmkUGafMcpZKNObVMLU" crossorigin="anonymous">
     </script>
 
-    {{-- <script>
+    <script>
         $(function() {
             let ip_address = '192.168.1.139',
                 socket_port = '3001',
@@ -397,16 +398,13 @@
                 `);
             });
         });
-    </script> --}}
-    <script>
+    </script>
+    {{-- <script>
         let ip_address = '127.0.0.1',
             socket_port = '3001',
             socket = io(ip_address + ':' + socket_port),
-            chatInput = $('#chatInput');
-
-        socket.on('connection', function() {
-            console.log('connected');
-        });
+            chatInput = $('#chatInput'),
+            user_id = $('input[name="user_id"]').val();
 
         chatInput.keypress(function(e) {
             let message = {
@@ -415,7 +413,7 @@
             }
 
             if (e.which === 13 && !e.shiftKey) {
-                socket.emit('message', 'message');
+                // socket.emit('message', message);
                 $.ajax({
                     url: `{{ route('chat.send-message') }}`,
                     type: 'get',
@@ -428,14 +426,22 @@
             }
         });
 
-        socket.on('sendChatToServer', (message) => {
-            $('#chat-room').append(`
-                <li class="clearfix">
-                    <div class="message my-message">${message.message}</div>
-                </li>
-            `);
+        socket.on('chat:messages', (data) => {
+            if (data.from_user_id === user_id) {
+                $('#chat-room').append(`
+                    <li class="clearfix">
+                        <div class="message other-message float-right"> ${data.message} </div>
+                    </li>
+                `);
+            } else {
+                $('#chat-room').append(`
+                    <li class="clearfix">
+                        <div class="message my-message">${data.message}</div>
+                    </li>
+                `);
+            }
         });
-    </script>
+    </script> --}}
 </body>
 
 </html>
