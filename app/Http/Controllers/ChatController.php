@@ -37,8 +37,6 @@ class ChatController extends Controller
         $chat->message = $request->message;
         $chat->save();
 
-        event(new ChatEvent($chat));
-
 		return response()->json([]);
 	}
 }

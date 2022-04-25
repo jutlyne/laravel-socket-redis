@@ -464,7 +464,8 @@
             }
         });
 
-        socket.on('chat:messages', (data) => {
+        socket.on(`chat.${user_id}:messages`, (data) => {
+            console.log(data);
             if (data.from_user_id === user_id) {
                 $('#chat-room').append(`
                     <li class="clearfix">
