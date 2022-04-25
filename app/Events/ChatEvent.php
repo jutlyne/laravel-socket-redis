@@ -35,8 +35,8 @@ class ChatEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        // return ['chat'];
-        return new PrivateChannel('chat.'.$this->chat->from_user_id); // need create table rooms in database, channel name is private-chat.{id}
+        return ['chat'];
+        // return new PrivateChannel('chat.'.$this->chat->from_user_id); // need create table rooms in database, channel name is private-chat.{id}
     }
 
     public function broadcastAs()
