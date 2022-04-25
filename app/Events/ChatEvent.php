@@ -10,6 +10,7 @@ use Illuminate\Broadcasting\PrivateChannel;
 use Illuminate\Contracts\Broadcasting\ShouldBroadcast;
 use Illuminate\Foundation\Events\Dispatchable;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ChatEvent implements ShouldBroadcast
 {
@@ -34,8 +35,8 @@ class ChatEvent implements ShouldBroadcast
      */
     public function broadcastOn()
     {
-        return ['chat.' . $this->chat->from_user_id];
-        // return new Channel('chat.'.$this->chat->id);
+        // return ['chat'];
+        return new PrivateChannel('chat.'.$this->chat->from_user_id); // need create table rooms in database, channel name is private-chat.{id}
     }
 
     public function broadcastAs()
